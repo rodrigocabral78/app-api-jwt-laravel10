@@ -1,0 +1,50 @@
+---
+version: "3.8"
+
+volumes:
+  logs:
+    # driver: local
+
+services:
+  app:
+    # build:
+    #   context: ./dockerfiles/8.1.18
+    #   dockerfile: Dockerfile.debian
+    #   tags:
+    #     - rodrigocabral78/app-php:8.1.18-alpine
+    #     - rodrigocabral78/app-php:latest
+    #   args:
+    #     GROUP: ${GROUP:-1001}:1001
+    image: php:8.1-alpine
+    command: php -welsS 0.0.0.0:8000 -t public public/index.php
+
+    env_file: .env
+    environment:
+      docker: "true"
+
+    ports:
+      - 8080:8000
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    network_mode: bridge
+    # networks:
+    #   - dba_network
+
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - logs:/var/www/storage/logs
+
+    # restart: always
+    privileged: true
+    tty: true
+    stdin_open: true
+    # user: 0:998
+
+    container_name: app-php8.1.18-alpine
+    hostname: app-php8.1.18-alpine
+    cpu_shares: 512
+    shm_size: 256m
+    mem_reservation: 512m
+    mem_limit: 1024m
+    memswap_limit: -1
