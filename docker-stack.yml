@@ -2,8 +2,8 @@
 version: "3.9"
 
 networks:
-  proxy_network:
-    external: true
+  # proxy_network:
+  #   external: true
   staging_network:
     external: true
 
@@ -35,7 +35,7 @@ services:
       - host.docker.internal:host-gateway
     # network_mode: bridge
     networks:
-      - proxy_network
+      # - proxy_network
       - staging_network
 
     working_dir: /var/www
@@ -85,7 +85,7 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 512M
-        reservations:
-          cpus: '0.5'
           memory: 128M
+        reservations:
+          cpus: '0.25'
+          memory: 16M

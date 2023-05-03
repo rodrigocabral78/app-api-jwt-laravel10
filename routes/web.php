@@ -15,18 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function (Request $request) {
-    echo "Ok! I'm";
-    dd(
-        $_SERVER,
-        // $_ENV['HOSTNAME'],
-        $request->path(),
-        $request->url(),
-        $request->fullUrl(),
-        $request->host(),
-        $request->httpHost(),
-        $request->schemeAndHttpHost(),
-        $request->ip(),
-    );
+    echo "Ok!<br>";
+    echo "I'm " . $_ENV["HOSTNAME"];
 
     // return view('welcome');
 });
