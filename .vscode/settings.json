@@ -1,0 +1,6 @@
+{
+  "yaml.schemas": {
+    "file:///home/rodrigo/.vscode/extensions/atlassian.atlascode-3.0.2/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+    "https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json": "file:///home/rodrigo/projects/github.com/rodrigocabral78/app-api-jwt-laravel10/docker-stack.yml"
+  }
+}

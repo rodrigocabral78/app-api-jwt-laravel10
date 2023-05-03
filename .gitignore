@@ -28,7 +28,7 @@ yarn-error.log
 /.idea
 
 ### VS Code ###
-/.vscode
+# /.vscode
 
 ### php cs fix ###
 .php_cs.cache
