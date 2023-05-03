@@ -6,4 +6,4 @@ RUN curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/
 
 EXPOSE 8000
 
-CMD php -S 0.0.0.0:8000 -t public public/index.php
+CMD php -welsS 0.0.0.0:8000 -t public public/index.php
