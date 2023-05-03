@@ -1,5 +1,11 @@
 ---
-version: "3.8"
+version: "3.9"
+
+networks:
+  proxy_network:
+    external: true
+  staging_network:
+    external: true
 
 volumes:
   logs:
@@ -9,28 +15,28 @@ volumes:
 services:
   app:
     # build:
-    #   context: ./dockerfiles/8.1.18
-    #   dockerfile: Dockerfile.debian
+    #   context: ./docker/php/8.1/
+    #   dockerfile: Dockerfile
     #   tags:
     #     - rodrigocabral78/app-php:8.1.18-alpine
     #     - rodrigocabral78/app-php:latest
     #   args:
     #     GROUP: ${GROUP:-1001}:1001
-    image: php:8.1-alpine
-    command: php -S 0.0.0.0:8000 -t public
+    image: rodrigocabral78/app-php:8.1.18-alpine
+    # image: php:8.1-alpine
+    # command: php -S 0.0.0.0:8000 -t public
     # command: ./artisan serve -vvv --ansi --host=localhost --port=8000
 
-    # env_file: .env-file
-    environment:
-      docker: "true"
-
-    ports:
-      - 8080:8000
+    # ports:
+    #   - 8080:8000
+    # expose:
+    #   - 8000
     extra_hosts:
       - host.docker.internal:host-gateway
-    network_mode: bridge
-    # networks:
-    #   - dba_network
+    # network_mode: bridge
+    networks:
+      - proxy_network
+      - staging_network
 
     working_dir: /var/www
     volumes:
@@ -38,8 +44,26 @@ services:
       - logs:/var/www/storage/logs
       - sessions:/var/www/storage/framework/sessions
 
-    # restart: always
-    privileged: true
+    env_file: .env
+    environment:
+      # docker: "true"
+      ###
+      # nginx-proxy
+      # https://github.com/nginx-proxy/nginx-proxy
+      #
+      - "VIRTUAL_HOST=app-laravel-docker-swarm-staging1.manaus.am.gov.br,app-laravel.docker-swarm-staging1.manaus.am.gov.br"
+      - "VIRTUAL_PORT=8000"
+      # - "VIRTUAL_PROTO=fastcgi"
+      # - "VIRTUAL_ROOT=/var/www"
+      ###
+      # - "VIRTUAL_PROTO=https"
+      # - "SERVER_TOKENS=on"
+      # - "NETWORK_ACCESS=internal"
+      # - "HTTPS_METHOD=redirect"
+      # - "SSL_POLICY"
+      # - "HSTS"
+      # - "CERT_NAME"
+
     tty: true
     stdin_open: true
     # user: 0:998
@@ -61,7 +85,7 @@ services:
       resources:
         limits:
           cpus: '1'
-          memory: 1024M
+          memory: 512M
         reservations:
           cpus: '0.5'
-          memory: 256M
+          memory: 128M

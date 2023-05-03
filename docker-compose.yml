@@ -4,23 +4,22 @@ version: "3.8"
 volumes:
   logs:
     # driver: local
+  sessions:
 
 services:
   app:
-    # build:
-    #   context: ./dockerfiles/8.1.18
-    #   dockerfile: Dockerfile.debian
-    #   tags:
-    #     - rodrigocabral78/app-php:8.1.18-alpine
-    #     - rodrigocabral78/app-php:latest
+    build:
+      context: ./docker/php/8.1/
+      dockerfile: Dockerfile
+      tags:
+        - rodrigocabral78/app-php:8.1.18-alpine
+        - rodrigocabral78/app-php:latest
     #   args:
     #     GROUP: ${GROUP:-1001}:1001
-    image: php:8.1-alpine
-    command: php -welsS 0.0.0.0:8000 -t public public/index.php
-
-    env_file: .env
-    environment:
-      docker: "true"
+    image: app-php:8.1.18-alpine
+    # image: php:8.1-alpine
+    # command: php -S 0.0.0.0:8000 -t public public/index.php
+    # command: ./artisan serve -vvv --ansi --host=localhost --port=8000
 
     ports:
       - 8080:8000
@@ -28,15 +27,18 @@ services:
       - host.docker.internal:host-gateway
     network_mode: bridge
     # networks:
-    #   - dba_network
+    #   - staging_network
 
     working_dir: /var/www
     volumes:
       - .:/var/www
       - logs:/var/www/storage/logs
+      - sessions:/var/www/storage/framework/sessions
 
-    # restart: always
-    privileged: true
+    env_file: .env
+    environment:
+      docker: "true"
+
     tty: true
     stdin_open: true
     # user: 0:998
@@ -48,3 +50,5 @@ services:
     mem_reservation: 512m
     mem_limit: 1024m
     memswap_limit: -1
+    restart: always
+    privileged: true

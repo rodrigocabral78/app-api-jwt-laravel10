@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (Request $request) {
+    echo "Ok! I'm";
+    dd(
+        $_SERVER,
+        // $_ENV['HOSTNAME'],
+        $request->path(),
+        $request->url(),
+        $request->fullUrl(),
+        $request->host(),
+        $request->httpHost(),
+        $request->schemeAndHttpHost(),
+        $request->ip(),
+    );
+
+    // return view('welcome');
 });
