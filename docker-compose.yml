@@ -1,5 +1,5 @@
 ---
-version: "3.8"
+version: "3.9"
 
 volumes:
   logs:
@@ -9,7 +9,7 @@ volumes:
 services:
   app:
     build:
-      context: ./docker/php/8.1/
+      context: ./.docker/php/8.1/
       dockerfile: Dockerfile
       tags:
         - rodrigocabral78/app-php:8.1.18-alpine
@@ -22,18 +22,18 @@ services:
     # command: ./artisan serve -vvv --ansi --host=localhost --port=8000
 
     ports:
-      - 8080:8000
+      - 8001:8000
     extra_hosts:
       - host.docker.internal:host-gateway
     network_mode: bridge
     # networks:
     #   - staging_network
 
-    working_dir: /var/www
+    working_dir: /var/www/html
     volumes:
-      - .:/var/www
-      - logs:/var/www/storage/logs
-      - sessions:/var/www/storage/framework/sessions
+      # - .:/var/www/html
+      - logs:/var/www/html/storage/logs
+      - sessions:/var/www/html/storage/framework/sessions
 
     env_file: .env
     environment:
