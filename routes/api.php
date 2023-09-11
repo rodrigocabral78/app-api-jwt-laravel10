@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,30 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+require __DIR__ . '/auth.php';
+
+Route::get('user', function (Request $request) {
     return $request->user();
+})->middleware(['auth:api']);
+
+Route::group([
+    'middleware' => 'jwt.verify',
+    // 'middleware' => 'jwt.auth',
+    // 'middleware' => 'auth:api',
+    'prefix' => 'v1/',
+    'as'     => 'api.v1.',
+], function () {
+    Route::get('users', [UserController::class, 'index'])
+        ->name('users');
 });
+
+Route::any('{any}', function () {
+    return response()->json([
+        'status'  => 'error',
+        'message' => 'Resource not found',
+    ], Response::HTTP_NOT_FOUND);
+})->where('any', '.*');
